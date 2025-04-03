@@ -22,17 +22,20 @@ pipeline {
                 scannerHome = tool 'sonarQube scanner 1';
             }
             steps {
-              withSonarQubeEnv(credentialsId: 'sonarqube-token', installationName: 'my-sonar') {
-                sh """
-                    ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=course-project-option-i-hungry5656 \
-                    -Dsonar.host.url=http://34.53.50.221:9000 \
-                    -Dsonar.login=your_sonar_token \
-                    -Dsonar.coverage.exclusions=**/*.java \
-                    -Dsonar.coverage.minimumCoverage=10
-                """
-              }
-            }
+                withSonarQubeEnv('my-sonar') { 
+                    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) { 
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=course-project-option-i-hungry5656 \
+                            -Dsonar.host.url=http://34.53.50.221:9000 \
+                            -Dsonar.login=$SONAR_TOKEN \
+                            -Dsonar.coverage.exclusions=**/*.java \
+                            -Dsonar.coverage.minimumCoverage=10
+                        """
+                    }
+                }
+}
+
         }
         stage('Quality Gate') {
             steps {
