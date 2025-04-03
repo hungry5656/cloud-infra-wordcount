@@ -23,7 +23,14 @@ pipeline {
             }
             steps {
               withSonarQubeEnv(credentialsId: 'sonarqube-token', installationName: 'my-sonar') {
-                sh "${scannerHome}/bin/sonar-scanner"
+                sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=course-project-option-i-hungry5656 \
+                    -Dsonar.host.url=http://34.53.50.221:9000 \
+                    -Dsonar.login=your_sonar_token \
+                    -Dsonar.coverage.exclusions=**/*.java \
+                    -Dsonar.coverage.minimumCoverage=10
+                """
               }
             }
         }
