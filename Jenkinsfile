@@ -48,7 +48,16 @@ pipeline {
         //     }
         // }
 
-        stage('Install Hadoop') {
+        stage('Clone Repository') {
+            steps {
+                sh '''
+                    rm -rf cloud-infra-wordcount
+                    git clone ${REPO_URL}
+                '''
+            }
+        }
+
+        stage('Compile Project') {
             steps {
                 sh '''
                     if ! command -v hadoop &> /dev/null
@@ -66,23 +75,6 @@ pipeline {
                     fi
 
                     hadoop version
-                '''
-            }
-        }
-
-        stage('Clone Repository') {
-            steps {
-                sh '''
-                    rm -rf cloud-infra-wordcount
-                    git clone ${REPO_URL}
-                '''
-            }
-        }
-
-        stage('Compile Project') {
-            steps {
-                sh '''
-
                     cd cloud-infra-wordcount
                     mkdir -p out
                     hadoop classpath
