@@ -31,11 +31,9 @@ pipeline {
         }
         stage('Submit Hadoop Job') {
             steps {
-                withCredentials([file(credentialsId: '104913671319578618047', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                    sh "gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}"
-                    sh "gcloud auth list"
+                
                     sh "gcloud --version"
-                }
+                
                 //sh "gsutil -m rm -r gs://cloudinfra-project-5656/output || true"
 
                 // sh '''
