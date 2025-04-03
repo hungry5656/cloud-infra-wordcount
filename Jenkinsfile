@@ -7,6 +7,7 @@ pipeline {
         stage('Hello') {
             steps {
                 echo 'Hello World'
+                sh 'sudo rm -rf hadoop-3.4.1*'
             }
         }
         stage('SCM Checkout') {
