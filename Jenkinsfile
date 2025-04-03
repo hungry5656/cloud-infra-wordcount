@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         REPO_URL = 'https://github.com/hungry5656/cloud-infra-wordcount.git'
-        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64'
     }
     stages { 
         stage('Hello') {
@@ -34,20 +33,20 @@ pipeline {
             }
         }
 
-        stage('Install Java') {
-            steps {
-                sh '''
+        // stage('Install Java') {
+        //     steps {
+        //         sh '''
                     
-                    sudo apt-get update
-                    sudo apt-get install -y openjdk-8-jdk
-                    export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
-                    export PATH=$JAVA_HOME/bin:$PATH
+        //             sudo apt-get update
+        //             sudo apt-get install -y openjdk-8-jdk
+        //             export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
+        //             export PATH=$JAVA_HOME/bin:$PATH
 
-                    java -version
-                    javac -version
-                '''
-            }
-        }
+        //             java -version
+        //             javac -version
+        //         '''
+        //     }
+        // }
         stage('Clone Repository') {
             steps {
                 sh '''
