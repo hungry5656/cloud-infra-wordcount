@@ -3,6 +3,7 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/hungry5656/cloud-infra-wordcount.git'
         JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64'
+    }
     stages { 
         stage('Hello') {
             steps {
