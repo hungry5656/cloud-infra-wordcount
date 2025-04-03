@@ -33,8 +33,7 @@ pipeline {
                         """
                     }
                 }
-}
-
+            }
         }
         stage('Quality Gate') {
             steps {
@@ -129,6 +128,8 @@ pipeline {
                         for file in $(find ${OUTPUT_FOLDER} -type f); do
                             cat $file
                         done
+
+                        rm -rf ${OUTPUT_FOLDER}
                     '''
                 }
             }
