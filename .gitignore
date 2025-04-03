@@ -1,0 +1,5 @@
+# ignore jar file
+**/*.jar
+
+# ignore target file
+target
