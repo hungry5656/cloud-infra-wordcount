@@ -57,7 +57,7 @@ pipeline {
                         wget --version
                         tar --version
                         wget https://dlcdn.apache.org/hadoop/common/hadoop-3.4.1/hadoop-3.4.1.tar.gz
-                        tar -xzvf hadoop-3.4.1tar.gz
+                        tar -xzvf hadoop-3.4.1.tar.gz
                         sudo mv hadoop-3.4.1 /usr/local/hadoop
                         export HADOOP_HOME=/usr/local/hadoop
                         export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
