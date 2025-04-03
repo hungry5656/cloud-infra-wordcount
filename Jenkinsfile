@@ -83,6 +83,7 @@ pipeline {
                     javac -classpath `hadoop classpath` -d . WordCount.java
                     jar cvf wc.jar -C out/ .
                     echo "Compiled wc.jar successfully."
+                    cd ..
                 '''
             }
         }
