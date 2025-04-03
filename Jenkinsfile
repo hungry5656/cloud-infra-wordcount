@@ -34,56 +34,48 @@ pipeline {
             }
         }
 
-        // stage('Install Java') {
+        // stage('Clone Repository') {
         //     steps {
         //         sh '''
-                    
-        //             sudo apt-get update
-        //             sudo apt-get install -y openjdk-8-jdk
-        //             export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
-        //             export PATH=$JAVA_HOME/bin:$PATH
-
-        //             java -version
-        //             javac -version
+        //             rm -rf cloud-infra-wordcount
+        //             git clone ${REPO_URL}
         //         '''
         //     }
         // }
 
-        stage('Clone Repository') {
-            steps {
-                sh '''
-                    rm -rf cloud-infra-wordcount
-                    git clone ${REPO_URL}
-                '''
-            }
-        }
-
         stage('Compile Project') {
             steps {
                 sh '''
+                    export HADOOP_HOME=/usr/local/hadoop
+                    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
                     if ! command -v hadoop &> /dev/null
                     then
                         sudo apt-get install -y wget tar
                         wget --version
                         tar --version
-                        sudo rm -rf /usr/local/hadoop
-                        if [ ! -f hadoop-3.4.1.tar.gz ]; then
-                            wget --no-verbose https://dlcdn.apache.org/hadoop/common/hadoop-3.4.1/hadoop-3.4.1.tar.gz
+                        if [ -d /usr/local/hadoop ]; then
+                            export HADOOP_HOME=/usr/local/hadoop
+                            export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+                        else
+                            sudo rm -rf /usr/local/hadoop
+                            if [ ! -f hadoop-3.4.1.tar.gz ]; then
+                                wget --no-verbose https://dlcdn.apache.org/hadoop/common/hadoop-3.4.1/hadoop-3.4.1.tar.gz
+                            fi
+                            tar -zxf hadoop-3.4.1.tar.gz > /dev/null 2>&1
+                            sudo mv hadoop-3.4.1 /usr/local/hadoop
+                            export HADOOP_HOME=/usr/local/hadoop
+                            export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
                         fi
-                        tar -zxf hadoop-3.4.1.tar.gz > /dev/null 2>&1
-                        sudo mv hadoop-3.4.1 /usr/local/hadoop
-                        export HADOOP_HOME=/usr/local/hadoop
-                        export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
                     fi
 
                     hadoop version
-                    cd cloud-infra-wordcount
+                    // cd cloud-infra-wordcount
                     mkdir -p out
                     hadoop classpath
                     javac -classpath `hadoop classpath` -d . WordCount.java
                     jar cvf wc.jar -C out/ .
                     echo "Compiled wc.jar successfully."
-                    cd ..
+                    // cd ..
                 '''
             }
         }
@@ -101,8 +93,8 @@ pipeline {
 
                         echo "Bucket Name: $BUCKET_NAME"
 
-                        gsutil cp cloud-infra-wordcount/out/wc.jar $BUCKET_NAME
-                        gsutil cp cloud-infra-wordcount/input.txt $BUCKET_NAME
+                        gsutil cp out/wc.jar $BUCKET_NAME
+                        gsutil cp input.txt $BUCKET_NAME
 
                         # Submit the job to Dataproc
                         gcloud dataproc jobs submit hadoop \
