@@ -85,6 +85,7 @@ pipeline {
 
                     cd cloud-infra-wordcount
                     mkdir -p out
+                    hadoop classpath
                     javac -classpath `hadoop classpath` -d . WordCount.java
                     jar cvf wc.jar -C out/ .
                     echo "Compiled wc.jar successfully."
