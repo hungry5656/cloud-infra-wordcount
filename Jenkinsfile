@@ -56,6 +56,8 @@ pipeline {
                         sudo apt-get install -y wget tar
                         wget --version
                         tar --version
+                        rm hadoop-3.4.1.tar.gz
+                        rm -rf hadoop-3.4.1
                         wget https://dlcdn.apache.org/hadoop/common/hadoop-3.4.1/hadoop-3.4.1.tar.gz
                         tar -xzvf hadoop-3.4.1.tar.gz
                         sudo mv hadoop-3.4.1 /usr/local/hadoop
