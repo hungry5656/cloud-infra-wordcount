@@ -38,7 +38,6 @@ pipeline {
                     '''
                 }
                 
-                
                 //sh "gsutil -m rm -r gs://cloudinfra-project-5656/output || true"
 
                 // sh '''
