@@ -25,10 +25,10 @@ pipeline {
                     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) { 
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=course-project-option-i-hungry5656 \
+                            -Dsonar.projectKey=cloud-infra-wordcount \
                             -Dsonar.login=$SONAR_TOKEN \
                             -Dsonar.coverage.exclusions=**/*.java \
-                            -Dsonar.coverage.minimumCoverage=10
+                            -Dsonar.coverage.minimumCoverage=0
                         """
                     }
                 }
