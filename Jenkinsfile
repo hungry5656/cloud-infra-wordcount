@@ -7,7 +7,7 @@ pipeline {
         stage('Hello') {
             steps {
                 echo 'Hello World'
-                sh 'sudo rm -rf hadoop-3.4.1*'
+                sh 'sudo rm -rf hadoop-3.4.1/'
             }
         }
         stage('SCM Checkout') {
@@ -66,10 +66,10 @@ pipeline {
                         sudo apt-get install -y wget tar
                         wget --version
                         tar --version
-                        rm -f hadoop-3.4.1.tar.gz
-                        rm -rf hadoop-3.4.1
                         sudo rm -rf /usr/local/hadoop
-                        wget https://dlcdn.apache.org/hadoop/common/hadoop-3.4.1/hadoop-3.4.1.tar.gz
+                        if [ ! -f hadoop-3.4.1.tar.gz ]; then
+                            wget --no-verbose https://dlcdn.apache.org/hadoop/common/hadoop-3.4.1/hadoop-3.4.1.tar.gz
+                        fi
                         tar -zxf hadoop-3.4.1.tar.gz > /dev/null 2>&1
                         sudo mv hadoop-3.4.1 /usr/local/hadoop
                         export HADOOP_HOME=/usr/local/hadoop
@@ -96,7 +96,7 @@ pipeline {
 
                         gcloud config set project cloudinfra-project-5656
 
-                        BUCKET_NAME=$(gcloud storage buckets list --filter="name:dataproc-staging-us-central1-*" --format="value(name)")
+                        BUCKET_NAME=$(gcloud storage buckets list --filter="name:dataproc-staging-us-west1-*" --format="value(name)")
 
                         echo "Bucket Name: $BUCKET_NAME"
 
