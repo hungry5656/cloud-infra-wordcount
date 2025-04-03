@@ -7,7 +7,6 @@ pipeline {
         stage('Hello') {
             steps {
                 echo 'Hello World'
-                // sh 'sudo rm -rf wc.jar out'
                 sh 'sudo rm -rf hadoop-3.4.1/'
             }
         }
@@ -102,15 +101,24 @@ pipeline {
                         echo "Bucket Name: $BUCKET_NAME"
 
                         gsutil cp wc.jar gs://$BUCKET_NAME
-                        gsutil rm -rf gs://${BUCKET_NAME}/output
                         gsutil cp input.txt gs://$BUCKET_NAME
 
                         # Submit the job to Dataproc
+                        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+                        OUTPUT_FOLDER="output-${TIMESTAMP}"
                         gcloud dataproc jobs submit hadoop \
                             --cluster=hadoop-cluster \
                             --region=us-west1 \
                             --jar=gs://${BUCKET_NAME}/wc.jar \
-                            -- WordCount gs://${BUCKET_NAME}/input.txt gs://${BUCKET_NAME}/output
+                            -- WordCount gs://${BUCKET_NAME}/input.txt gs://${BUCKET_NAME}/${OUTPUT_FOLDER}
+                        
+                        gsutil -m cp -r gs://${BUCKET_NAME}/${OUTPUT_FOLDER} .
+                        echo "Results copied to local folder: ${OUTPUT_FOLDER}"
+
+                        echo "\n\nResult of Hadoop Job:"
+                        for file in $(find ${OUTPUT_FOLDER} -type f); do
+                            cat $file
+                        done
                     '''
                 }
             }
