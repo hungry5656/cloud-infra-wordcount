@@ -33,6 +33,21 @@ pipeline {
                 }
             }
         }
+
+        stage('Install Java') {
+            steps {
+                sh '''
+                    
+                    sudo apt-get update
+                    sudo apt-get install -y openjdk-8-jdk
+                    export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
+                    export PATH=$JAVA_HOME/bin:$PATH
+
+                    java -version
+                    javac -version
+                '''
+            }
+        }
         stage('Clone Repository') {
             steps {
                 sh '''
@@ -45,6 +60,7 @@ pipeline {
         stage('Compile Project') {
             steps {
                 sh '''
+
                     cd cloud-infra-wordcount
                     mkdir -p out
                     javac -classpath `hadoop classpath` -d . WordCount.java
