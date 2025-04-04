@@ -48,7 +48,7 @@ pipeline {
                     export HADOOP_HOME=/usr/local/hadoop
                     export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 
-                    sudo apt install -y maven
+                    sudo apt install -y maven wget tar
                     
                     if [ ! -d /usr/local/java/zulu8.84.0.15-ca-jdk8.0.442-linux_x64 ]
                     then
